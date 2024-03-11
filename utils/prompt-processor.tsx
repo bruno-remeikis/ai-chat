@@ -11,7 +11,7 @@ export function processPrompt(text: string): React.JSX.Element[] {
         let bold = text.startsWith('**')
         return text.split('**').map((t, i) => {
           bold = !bold
-          return bold ? <span key={i} className='font-bold'>{ t }</span> : <>{ t }</>
+          return bold ? <span key={i} className='font-bold text-purple-500'>{ t }</span> : <>{ t }</>
         })
       }
       // Se não cair em nenhum dos casos acima, retorna o texto puro

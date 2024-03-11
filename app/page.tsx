@@ -1,9 +1,10 @@
 'use client'
 
-import React, { FormEvent, useState } from "react"
+import React, { FormEvent, useEffect, useState } from "react"
 import { LoadingDots } from "../components/LoadingDots"
 import { processPrompt } from "@/utils/prompt-processor"
 import { IoSend } from "react-icons/io5"
+import { ThemeSwitch } from "@/components/ThemeSwitch"
 
 type AiResponse = {
   response: string
@@ -24,18 +25,19 @@ type BaloonProps = {
 
 function Baloon({ role, children, className = '' }: BaloonProps) {
   return (
-    <div className={`min-w-20 ${role === 'user' ? 'self-end ml-12' : 'self-start mr-12'} p-3 mb-3 last:mb-0 rounded-md bg-gray-500/25 ${className}`}>
-      <span className='block text-xs font-thin'>{ role === 'user' ? 'Você' : 'IA' }</span>
+    <div className={`text-black dark:text-white bg-gray-300/25 dark:bg-gray-500/25 min-w-20 ${role === 'user' ? 'self-end ml-12' : 'self-start mr-12'} p-3 mb-3 last:mb-0 rounded-md shadow-md ${className}`}>
+      <span className='block text-xs dark:font-thin font-light'>{ role === 'user' ? 'Você' : 'IA' }</span>
       { children }
     </div>
   )
 }
 
-
 export default function Home() {
   const [text, setText] = useState<string>('')
   const [prompts, setPrompts] = useState<Prompt[]>([ /*{role:'user',text:'aaa'}, {role:'ai',text:'bbb'}*/ ])
   const [loading, setLoading] = useState<boolean>(false)
+
+  
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault()
@@ -78,8 +80,20 @@ export default function Home() {
 
   return (
     <div className='min-h-screen'>
-      <div className='flex flex-col items-center min-h-screen p-6 bg-gradient-to-r from-slate-900 via-purple-900 to-slate-900'>
-        <div className='flex-1 flex flex-col w-[42rem]'>
+      <div className='fixed top-[1rem] right-[1rem]'>
+        <ThemeSwitch />
+      </div>
+
+      {/* https://hypercolor.dev/ */}
+      <div className={
+        'flex flex-col items-center min-h-screen p-6 pt-16 ' +
+        // Light background gradient:
+        'linear-gradient(to right, rgb(229, 231, 235), rgb(156, 163, 175), rgb(75, 85, 99)) ' +
+        // Dark background gradient:
+        'dark:bg-gradient-to-r dark:from-gray-700 dark:via-gray-900 dark:to-black'
+        //'dark:bg-gradient-to-r dark:from-slate-900 dark:via-purple-900 dark:to-slate-900'
+      }>
+        <div className='flex-1 flex flex-col md:w-[42rem] w-full'>
           
           {/* Dialog baloons */}
           <div className='flex-1 flex flex-col justify-end mb-6 rounded'> {/* bg-gray-500/25 */}
@@ -90,17 +104,21 @@ export default function Home() {
             )}
           </div>
 
+          {/* No baloonw yet */}
+          {prompts.length === 0 &&
+            <span className='flex-1 self-center dark:text-white/40 font-thin'>Converse com a IA</span>}
+
           {/* Loading baloon */}
           {loading &&
             <Baloon role='ai' className='animation-slideUp'>
-              <LoadingDots className='mt-2' size='0.375rem' color='rgba(255, 255, 255, 0.85)' />
+              <LoadingDots className='mt-2' size='0.375rem' /*color='rgba(255, 255, 255, 0.85)'*/ />
             </Baloon>}
 
           {/* Input form */}
           <form onSubmit={handleSubmit} className='flex'>
-            <input value={text} onChange={e => setText(e.target.value)} placeholder='Escreva aqui' className="flex-1 bg-transparent text-white h-10 px-3 border-[1px] border-white/60 rounded" /> {/* bg-white/20 */}
+            <input value={text} onChange={e => setText(e.target.value)} placeholder='Escreva aqui' className="flex-1 bg-transparent dark:text-white text-black h-10 px-3 border-[1px] dark:border-white/60 border-purple-700/60 rounded" /> {/* dark:border-purple-500/90 bg-white/20 */}
             <button type="submit" className='flex justify-center items-center bg-purple-600 w-10 h-10 ml-2 rounded transition hover:opacity-75'>
-              <IoSend />
+              <IoSend className='text-white' />
             </button>
           </form>
           
