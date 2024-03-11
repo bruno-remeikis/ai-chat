@@ -56,7 +56,7 @@ export default function Home() {
     }
 
     try {
-      const response = await fetch(`http://localhost:3000/api/chat?prompt=${prompt.trim()}`, config)
+      const response = await fetch(`/api/chat?prompt=${prompt.trim()}`, config)
       const result: AiResponse = await response.json()
 
       if(!response.ok) {
