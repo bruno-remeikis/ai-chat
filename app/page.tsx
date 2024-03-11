@@ -25,7 +25,7 @@ type BaloonProps = {
 
 function Baloon({ role, children, className = '' }: BaloonProps) {
   return (
-    <div className={`text-black dark:text-white bg-gray-300/25 dark:bg-gray-500/25 min-w-20 ${role === 'user' ? 'self-end ml-12' : 'self-start mr-12'} p-3 mb-3 last:mb-0 rounded-md shadow-md ${className}`}>
+    <div className={`text-black dark:text-white bg-gray-100/25 dark:bg-gray-500/25 min-w-20 ${role === 'user' ? 'self-end ml-12' : 'self-start mr-12'} p-3 mb-3 last:mb-0 rounded-md shadow-md ${className}`}>
       <span className='block text-xs dark:font-thin font-light'>{ role === 'user' ? 'Você' : 'IA' }</span>
       { children }
     </div>
@@ -36,8 +36,6 @@ export default function Home() {
   const [text, setText] = useState<string>('')
   const [prompts, setPrompts] = useState<Prompt[]>([ /*{role:'user',text:'aaa'}, {role:'ai',text:'bbb'}*/ ])
   const [loading, setLoading] = useState<boolean>(false)
-
-  
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault()
@@ -79,16 +77,16 @@ export default function Home() {
   }
 
   return (
-    <div className='min-h-screen'>
+    <div className='min-h-svh'>
       <div className='fixed top-[1rem] right-[1rem]'>
         <ThemeSwitch />
       </div>
 
       {/* https://hypercolor.dev/ */}
       <div className={
-        'flex flex-col items-center min-h-screen p-6 pt-16 ' +
+        'flex flex-col items-center min-h-svh p-6 pt-16 ' +
         // Light background gradient:
-        'linear-gradient(to right, rgb(229, 231, 235), rgb(156, 163, 175), rgb(75, 85, 99)) ' +
+        'bg-gradient-to-r from-gray-200 via-gray-300 to-gray-300 ' +
         // Dark background gradient:
         'dark:bg-gradient-to-r dark:from-gray-700 dark:via-gray-900 dark:to-black'
         //'dark:bg-gradient-to-r dark:from-slate-900 dark:via-purple-900 dark:to-slate-900'
@@ -106,7 +104,7 @@ export default function Home() {
 
           {/* No baloonw yet */}
           {prompts.length === 0 &&
-            <span className='flex-1 self-center dark:text-white/40 font-thin'>Converse com a IA</span>}
+            <span className='flex-1 self-center dark:text-white/40 font-extralight'>Converse com a IA</span>}
 
           {/* Loading baloon */}
           {loading &&
