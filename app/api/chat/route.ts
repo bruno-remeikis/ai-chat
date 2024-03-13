@@ -6,12 +6,12 @@ const genAI = process.env.GEMINI_API_KEY
   ? new GoogleGenerativeAI(process.env.GEMINI_API_KEY)
   : null
 
-export async function GET(req: NextRequest) {
+export async function POST(req: NextRequest) {
   if(!genAI)
     return NextResponse.json({ response: 'Desculpe. Houve um erro em nosso servidor.' }, { status: 500 })
 
   try {
-    const prompt = req.nextUrl.searchParams.get('prompt') //req.query.prompt
+    const { prompt } = await req.json() //req.nextUrl.searchParams.get('prompt') //req.query.prompt
 
     if(!prompt)
       return NextResponse.json({ response: 'Desculpe. Houve um erro ao tentar contactar a IA.' }, { status: 400 })
@@ -25,7 +25,7 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ response: text })
   }
   catch(err) {
-      console.error(err)
-      return NextResponse.json({ response: 'Desculpe. Houve um erro em nosso servidor.' }, { status: 500 })
+    console.error(err)
+    return NextResponse.json({ response: 'Desculpe. Houve um erro em nosso servidor.' }, { status: 500 })
   }
 }
