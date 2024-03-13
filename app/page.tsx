@@ -6,6 +6,7 @@ import { processPrompt } from "@/utils/prompt-processor"
 import { IoSend } from "react-icons/io5"
 import { ThemeSwitch } from "@/components/ThemeSwitch"
 import Link from "next/link"
+import { useTheme } from "@/contexts/Theme"
 
 type AiResponse = {
   response: string
@@ -33,7 +34,8 @@ function Baloon({ role, children, className = '' }: BaloonProps) {
   )
 }
 
-export default function Home() {
+export default function Home()
+{
   const [text, setText] = useState<string>('')
   const [prompts, setPrompts] = useState<Prompt[]>([ /*{role:'user',text:'aaa'}, {role:'ai',text:'bbb'}*/ ])
   const [loading, setLoading] = useState<boolean>(false)
@@ -57,7 +59,7 @@ export default function Home() {
     }
 
     try {
-      const response = await fetch('http://localhost:3000/api/chat', config)
+      const response = await fetch('/api/chat', config)
       const result: AiResponse = await response.json()
 
       if(!response.ok) {
@@ -82,13 +84,14 @@ export default function Home() {
     <div className='flex flex-col items-center min-h-svh'>
 
       {/* Menú superior */}
-      <div className='flex justify-between items-center bg-gray-200 dark:bg-gray-900 w-full p-[1rem] shadow-lg'>
+      <div className='flex justify-between items-center bg-gray-200 dark:bg-gray-900 w-full pr-[1rem] shadow z-50'>
         <Link
+          className='p-[1rem] hover:bg-white/10 transition-all'
           href='https://portifolio-remeikis.vercel.app/'
           target='_blank'
         >
-          <span className='block text-black    dark:text-gray-300 font-thin  text-xs'>Desenvolvido por</span>
-          <span className='block text-gray-700 dark:text-gray-300 font-light text-sm'>Bruno Remeikis</span>
+          <span className='block text-black dark:text-gray-300 font-extralight  text-xs'>Desenvolvido por</span>
+          <span className='block text-black dark:text-gray-300 font-light text-sm'>Bruno Remeikis</span>
         </Link>
 
         <div>
@@ -104,7 +107,7 @@ export default function Home() {
         // Dark background gradient:
         'dark:bg-gradient-to-r dark:from-gray-700 dark:via-gray-900 dark:to-black'
       }>
-        <div className='flex-1 flex flex-col md:w-[42rem] w-full'> {/* overflow-y-scroll */}
+        <div className='flex-1 flex flex-col md:w-[46rem] w-full'> {/* overflow-y-scroll */}
           
           {/* Dialog baloons */}
           <div className='flex-1 flex flex-col justify-end mb-6 rounded'> {/* bg-gray-500/25 */}
@@ -127,8 +130,8 @@ export default function Home() {
 
           {/* Input form */}
           <form onSubmit={handleSubmit} className='flex'>
-            <input value={text} onChange={e => setText(e.target.value)} placeholder='Escreva aqui' className="flex-1 bg-transparent dark:text-white text-black h-10 px-3 border-[1px] dark:border-white/60 border-purple-700/60 rounded" /> {/* dark:border-purple-500/90 bg-white/20 */}
-            <button type="submit" className='flex justify-center items-center bg-purple-600 w-10 h-10 ml-2 rounded transition hover:opacity-75'>
+            <input value={text} onChange={e => setText(e.target.value)} placeholder='Escreva aqui' className="flex-1 bg-transparent dark:text-white text-black h-10 px-3 border-[2px] dark:border-fuchsia-800 border-purple-700/60 rounded" /> {/* dark:border-purple-500/90 bg-white/20 */}
+            <button type="submit" className='flex justify-center items-center bg-purple-600 dark:bg-fuchsia-800 w-10 h-10 ml-2 rounded transition hover:opacity-75'>
               <IoSend className='text-white' />
             </button>
           </form>

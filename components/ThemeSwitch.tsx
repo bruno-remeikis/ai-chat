@@ -1,7 +1,8 @@
+import { Theme, useTheme } from '@/contexts/Theme'
 import { Switch } from '@headlessui/react'
 import { SunIcon } from '@heroicons/react/24/solid'
-import { useEffect, useState } from 'react'
-import { useLocalStorage } from 'usehooks-ts'
+import { useEffect } from 'react'
+import { useLocalStorage, useReadLocalStorage } from 'usehooks-ts'
 
 function classNames(...classes: string[]) {
     return classes.filter(Boolean).join(' ')
@@ -9,18 +10,20 @@ function classNames(...classes: string[]) {
 
 export const ThemeSwitch = () =>
 {
-    const [theme, setTheme] = useLocalStorage('theme', 'light')
+    const rlsTheme = useReadLocalStorage<Theme>('theme')
+
+    const { theme, setTheme } = useTheme()
+    const [ lsTheme, setLsTheme ] = useLocalStorage('theme', 'light')
+    const enabled = theme === 'light'
         
     useEffect(() => {
         document.body.classList.remove('light', 'dark')
-        document.body.classList.add(theme)
-    }, [theme])
-
-    const [enabled, setEnabled] = useState(theme == 'light')
+        document.body.classList.add(lsTheme)
+    }, [lsTheme])
 
     const handleThemeChange = (enabled: boolean) => {
+        setLsTheme(enabled ? 'light' : 'dark')
         setTheme(enabled ? 'light' : 'dark')
-        setEnabled(enabled)
     }
 
     return (
@@ -31,7 +34,7 @@ export const ThemeSwitch = () =>
                 enabled ? 'bg-gray-400' : 'bg-yellow-600',
                 'relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out'
             )}
-            >
+        >
             <span className='sr-only'>Use setting</span>
             <span
                 className={classNames(
