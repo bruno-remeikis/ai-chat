@@ -48,8 +48,11 @@ export function processPrompt(text: string): React.JSX.Element[] {
                 borderRadius: '0.3rem',
                 backgroundColor: darkTheme ? 'rgba(0, 0, 0, 0.6)' : 'rgba(255, 255, 255, 0.6)',
               }}
-              showLineNumbers={true}
-              wrapLongLines={true}
+              showLineNumbers
+
+              wrapLines
+              wrapLongLines
+              lineProps={{style: {wordBreak: 'break-all', whiteSpace: 'pre-wrap'}}}
             >
               { codeText }
             </SyntaxHighlighter>

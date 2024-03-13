@@ -26,7 +26,7 @@ type BaloonProps = {
 
 function Baloon({ role, children, className = '' }: BaloonProps) {
   return (
-    <div className={`text-black dark:text-white bg-gray-100/25 dark:bg-gray-500/25 min-w-20 ${role === 'user' ? 'self-end ml-12' : 'self-start mr-12'} p-3 mb-3 last:mb-0 rounded-md shadow-md ${className}`}>
+    <div className={`text-black dark:text-white bg-gray-100/25 dark:bg-gray-500/25 min-w-20 ${role === 'user' ? 'self-end sm:ml-12 ml-4' : 'self-start sm:mr-12 mr-4'} p-3 mb-3 last:mb-0 rounded-md shadow-md ${className}`}>
       <span className='block text-xs dark:font-thin font-light'>{ role === 'user' ? 'Você' : 'IA' }</span>
       { children }
     </div>
