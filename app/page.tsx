@@ -1,12 +1,11 @@
 'use client'
 
-import React, { FormEvent, useEffect, useState } from "react"
+import React, { FormEvent, useCallback, useEffect, useMemo, useState } from "react"
 import { LoadingDots } from "../components/LoadingDots"
 import { processPrompt } from "@/utils/prompt-processor"
 import { IoSend } from "react-icons/io5"
 import { ThemeSwitch } from "@/components/ThemeSwitch"
 import Link from "next/link"
-import { useTheme } from "@/contexts/Theme"
 
 type AiResponse = {
   response: string
@@ -17,6 +16,7 @@ type Role = 'user' | 'ai'
 type Prompt = {
   role: Role
   text: string
+  error?: boolean
 }
 
 type BaloonProps = {
@@ -26,6 +26,8 @@ type BaloonProps = {
 }
 
 function Baloon({ role, children, className = '' }: BaloonProps) {
+  console.log('AAAAAA')
+
   return (
     <div className={`text-black dark:text-white bg-gray-100/25 dark:bg-gray-500/25 min-w-20 ${role === 'user' ? 'self-end sm:ml-12 ml-4' : 'self-start sm:mr-12 mr-4'} p-3 mb-3 last:mb-0 rounded-md shadow-md ${className}`}>
       <span className='block text-xs dark:font-thin font-light'>{ role === 'user' ? 'Você' : 'IA' }</span>
@@ -39,6 +41,13 @@ export default function Home()
   const [text, setText] = useState<string>('')
   const [prompts, setPrompts] = useState<Prompt[]>([ /*{role:'user',text:'aaa'}, {role:'ai',text:'bbb'}*/ ])
   const [loading, setLoading] = useState<boolean>(false)
+
+  /*const memoizedPrompts = useCallback(() =>
+    prompts.map((p, i) => (
+      <Baloon key={i} role={p.role} className={p.role === 'user' ? 'animation-slideUp' : undefined}>
+        { useMemo(() => processPrompt(p.text), [p.text]) }
+      </Baloon>
+  )), [prompts]);*/
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault()
@@ -63,16 +72,15 @@ export default function Home()
       const result: AiResponse = await response.json()
 
       if(!response.ok) {
-        setPrompts(p => [...p, { role: 'ai', text: result.response }]) // I don't understand what you're asking me to do. Can you please clarify?
+        setPrompts(p => [...p, { role: 'ai', text: result.response, error: true }]) // I don't understand what you're asking me to do. Can you please clarify?
         return;
       }
 
-      console.log(result)
       setPrompts(p => [...p, { role: 'ai', text: result.response }])
     }
     catch(err) {
       console.error(err)
-      setPrompts(p => [...p, { role: 'ai', text: "Desculpe. Hoje não estou funcionando corretamente." }])
+      setPrompts(p => [...p, { role: 'ai', text: "Desculpe. Hoje não estou funcionando corretamente.", error: true }])
     }
     finally {
       setLoading(false)
@@ -84,7 +92,7 @@ export default function Home()
     <div className='flex flex-col items-center min-h-svh'>
 
       {/* Menú superior */}
-      <div className='flex justify-between items-center bg-gray-200 dark:bg-gray-900 w-full pr-[1rem] shadow z-50'>
+      <div className='fixed flex justify-between items-center bg-gray-200 dark:bg-gray-900 w-full pr-[1rem] shadow z-50'>
         <Link
           className='p-[1rem] hover:bg-white/10 transition-all'
           href='https://portifolio-remeikis.vercel.app/'
@@ -101,7 +109,7 @@ export default function Home()
 
       {/* https://hypercolor.dev/ */}
       <div className={
-        'flex-1 flex flex-col items-center w-full p-6 pt-16 ' +
+        'flex-1 flex flex-col items-center w-full p-6 pt-24 ' +
         // Light background gradient:
         'bg-gradient-to-r from-gray-200 via-gray-300 to-gray-300 ' +
         // Dark background gradient:
@@ -112,10 +120,12 @@ export default function Home()
           {/* Dialog baloons */}
           <div className='flex-1 flex flex-col justify-end mb-6 rounded'> {/* bg-gray-500/25 */}
             {prompts.map((p, i) =>
-              <Baloon key={i} role={p.role} className={p.role === 'user' ? 'animation-slideUp' : undefined}>
+              <Baloon key={i} role={p.role} className={`${p.role === 'user' ? 'animation-slideUp' : ''} ${p.error ? 'bg-red-300 dark:bg-red-600/50' : ''}`}>
+                {/* { useMemo(() => processPrompt(p.text), [p.text]) } */}
                 { processPrompt(p.text) }
               </Baloon>
             )}
+            {/* { memoizedPrompts() } */}
           </div>
 
           {/* No baloonw yet */}
@@ -130,7 +140,7 @@ export default function Home()
 
           {/* Input form */}
           <form onSubmit={handleSubmit} className='flex'>
-            <input value={text} onChange={e => setText(e.target.value)} placeholder='Escreva aqui' className="flex-1 bg-transparent dark:text-white text-black h-10 px-3 border-[2px] dark:border-fuchsia-800 border-purple-700/60 rounded" /> {/* dark:border-purple-500/90 bg-white/20 */}
+            <input type='text' value={text} onChange={e => { e.preventDefault(); setText(e.target.value) }} placeholder='Escreva aqui' className="flex-1 bg-transparent dark:text-white text-black h-10 px-3 border-[2px] dark:border-fuchsia-800 border-purple-700/60 rounded" /> {/* dark:border-purple-500/90 bg-white/20 */}
             <button type="submit" className='flex justify-center items-center bg-purple-600 dark:bg-fuchsia-800 w-10 h-10 ml-2 rounded transition hover:opacity-75'>
               <IoSend className='text-white' />
             </button>

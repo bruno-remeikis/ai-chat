@@ -17,7 +17,6 @@ const ThemeContext = createContext<ThemeContextProps | null>(null);
 export const ThemeProvider = ({ children }: { children: ReactNode }) =>
 {
     const localStorageTheme = useReadLocalStorage<Theme>('theme') // <- Pega o valor já existente em LocalStorage
-    console.log(localStorageTheme)
     const [theme, setTheme] = useState<Theme>(localStorageTheme ? localStorageTheme : 'light');
 
     return (

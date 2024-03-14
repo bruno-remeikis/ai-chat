@@ -59,9 +59,10 @@ body {
 
 /* -- Scrollbar -- */
 
-/* width */
+/* Size */
 ::-webkit-scrollbar {
   width: 6px;
+  height: 6px;
 }
 /* Track */
 ::-webkit-scrollbar-track {
