@@ -19,19 +19,32 @@ type Prompt = {
   error?: boolean
 }
 
+// type ProcessedPrompt = React.JSX.Element | React.JSX.Element[]
+
 type BaloonProps = {
   role: Role
-  children: React.JSX.Element | React.JSX.Element[]
+  children: string | React.JSX.Element | React.JSX.Element[]
   className?: string
 }
 
-function Baloon({ role, children, className = '' }: BaloonProps) {
-  console.log('AAAAAA')
+function Balloon({ role, children, className }: BaloonProps) {
+  const [elements, setElements] = useState<React.JSX.Element[]>([])
+
+  useEffect(() => {
+    if(typeof children === 'string')
+      setElements(processPrompt(children))
+    else if(Array.isArray(children))
+      setElements(children)
+    else
+      setElements([children])
+  }, [])
 
   return (
     <div className={`text-black dark:text-white bg-gray-100/25 dark:bg-gray-500/25 min-w-20 ${role === 'user' ? 'self-end sm:ml-12 ml-4' : 'self-start sm:mr-12 mr-4'} p-3 mb-3 last:mb-0 rounded-md shadow-md ${className}`}>
       <span className='block text-xs dark:font-thin font-light'>{ role === 'user' ? 'Você' : 'IA' }</span>
-      { children }
+      <div className=''>
+        {elements}
+      </div>
     </div>
   )
 }
@@ -41,6 +54,9 @@ export default function Home()
   const [text, setText] = useState<string>('')
   const [prompts, setPrompts] = useState<Prompt[]>([ /*{role:'user',text:'aaa'}, {role:'ai',text:'bbb'}*/ ])
   const [loading, setLoading] = useState<boolean>(false)
+
+  const processText = useCallback(processPrompt, []);
+  // const processedText = useMemo(() => processText(text), [text, processText]);
 
   /*const memoizedPrompts = useCallback(() =>
     prompts.map((p, i) => (
@@ -118,12 +134,17 @@ export default function Home()
         <div className='flex-1 flex flex-col md:w-[46rem] w-full'> {/* overflow-y-scroll */}
           
           {/* Dialog baloons */}
+          {/* overflow-x-hidden  */}
           <div className='flex-1 flex flex-col justify-end mb-6 rounded'> {/* bg-gray-500/25 */}
-            {prompts.map((p, i) =>
+            {/* {prompts.map((p, i) =>
               <Baloon key={i} role={p.role} className={`${p.role === 'user' ? 'animation-slideUp' : ''} ${p.error ? 'bg-red-300 dark:bg-red-600/50' : ''}`}>
-                {/* { useMemo(() => processPrompt(p.text), [p.text]) } */}
-                { processPrompt(p.text) }
+                { processPrompt(p.text).map(el => el) }
               </Baloon>
+            )} */}
+            {prompts.map((p, i) =>
+              <Balloon key={i} role={p.role} className={`${p.role === 'user' ? 'animation-slideUp' : ''} ${p.error ? 'bg-red-300 dark:bg-red-600/50' : ''}`}>
+                { p.text }
+              </Balloon>
             )}
             {/* { memoizedPrompts() } */}
           </div>
@@ -134,9 +155,9 @@ export default function Home()
 
           {/* Loading baloon */}
           {loading &&
-            <Baloon role='ai' className='animation-slideUp'>
+            <Balloon role='ai' className='animation-slideUp'>
               <LoadingDots className='mt-2' size='0.375rem' /*color='rgba(255, 255, 255, 0.85)'*/ />
-            </Baloon>}
+            </Balloon>}
 
           {/* Input form */}
           <form onSubmit={handleSubmit} className='flex'>

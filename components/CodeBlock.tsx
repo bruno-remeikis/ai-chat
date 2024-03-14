@@ -22,9 +22,9 @@ export const CodeBlock = ({ text, lang }: CodeBlockProps) =>
             }}
             showLineNumbers
 
-            wrapLines
-            wrapLongLines
-            lineProps={{style: {wordBreak: 'break-all', whiteSpace: 'pre-wrap'}}}
+            // wrapLines
+            // wrapLongLines
+            // lineProps={{style: {wordBreak: 'break-all', whiteSpace: 'pre-wrap'}}}
             >
             { text }
         </SyntaxHighlighter>
