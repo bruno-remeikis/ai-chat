@@ -1,5 +1,17 @@
 import { CodeBlock } from "@/components/CodeBlock"
+import { useTheme } from "@/contexts/Theme"
 import React, { useEffect, useState } from "react"
+
+const BoldSpan = ({ children }: { children: string }) => {
+  const { theme } = useTheme();
+  return (
+    <span style={{
+      color: theme === 'dark' ? 'rgb(192, 132, 252)' : 'rgb(126, 34, 206)',
+      fontWeight: 'bold'
+      // fontSize: '1.1rem'
+    }}>{ children }</span>
+  )
+}
 
 /**
  * Converte a resposta textual da IA Gemini para elementos HTML
@@ -8,8 +20,6 @@ import React, { useEffect, useState } from "react"
  */
 export function processPrompt(text: string): React.JSX.Element[] {
   
-  console.log('PROCESSING...')
-
   // Realiza um subprocessamento do texto (para identificar outros elementos)
   function process2(text: string): React.JSX.Element[] | string {
     // Identifica textos destacados (negrito)
@@ -25,7 +35,7 @@ export function processPrompt(text: string): React.JSX.Element[] {
           continue
 
         const r = bold
-          ? <span key={i} className='font-bold' style={{ color: 'rgb(168, 85, 247)' }}>{ part }</span>
+          ? <BoldSpan key={i}>{ part }</BoldSpan>
           : <>{ part }</>
 
         bold = !bold
