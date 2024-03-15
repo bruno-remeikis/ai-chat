@@ -12,21 +12,26 @@ export const CodeBlock = ({ text, lang }: CodeBlockProps) =>
     const { theme } = useTheme()
 
     return (
-        <SyntaxHighlighter
-            language={lang}
-            style={theme === 'dark' ? coldarkDark : oneLight}
-            customStyle={{
-                borderLeft: `4px solid ${theme === 'dark' ? 'rgba(255, 255, 255, 0.6)' : 'rgba(0, 0, 0, 0.6)'}`,
-                borderRadius: '0.3rem',
-                backgroundColor: theme === 'dark' ? 'rgba(0, 0, 0, 0.6)' : 'rgba(255, 255, 255, 0.6)',
-            }}
-            showLineNumbers
+        <div className='overflow-x-hidden'>
+            <SyntaxHighlighter
+                language={lang}
+                style={theme === 'dark' ? coldarkDark : oneLight}
+                customStyle={{
+                    borderLeft: `4px solid ${theme === 'dark' ? 'rgba(255, 255, 255, 0.6)' : 'rgba(0, 0, 0, 0.6)'}`,
+                    borderRadius: '0.3rem',
+                    backgroundColor: theme === 'dark' ? 'rgba(0, 0, 0, 0.6)' : 'rgba(255, 255, 255, 0.6)',
+                    // Gambiarra:
+                    overflowX: 'auto',
+                    maxWidth: 'calc(100vw - 6rem)'
+                }}
+                showLineNumbers
 
-            // wrapLines
-            // wrapLongLines
-            // lineProps={{style: {wordBreak: 'break-all', whiteSpace: 'pre-wrap'}}}
-            >
-            { text }
-        </SyntaxHighlighter>
+                // wrapLines
+                // wrapLongLines
+                // lineProps={{style: {wordBreak: 'break-all', whiteSpace: 'pre-wrap'}}}
+                >
+                { text }
+            </SyntaxHighlighter>
+        </div>
     )
 }

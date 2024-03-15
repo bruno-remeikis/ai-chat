@@ -52,18 +52,8 @@ function Balloon({ role, children, className }: BaloonProps) {
 export default function Home()
 {
   const [text, setText] = useState<string>('')
-  const [prompts, setPrompts] = useState<Prompt[]>([ /*{role:'user',text:'aaa'}, {role:'ai',text:'bbb'}*/ ])
+  const [prompts, setPrompts] = useState<Prompt[]>([])
   const [loading, setLoading] = useState<boolean>(false)
-
-  const processText = useCallback(processPrompt, []);
-  // const processedText = useMemo(() => processText(text), [text, processText]);
-
-  /*const memoizedPrompts = useCallback(() =>
-    prompts.map((p, i) => (
-      <Baloon key={i} role={p.role} className={p.role === 'user' ? 'animation-slideUp' : undefined}>
-        { useMemo(() => processPrompt(p.text), [p.text]) }
-      </Baloon>
-  )), [prompts]);*/
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault()
@@ -131,33 +121,26 @@ export default function Home()
         // Dark background gradient:
         'dark:bg-gradient-to-r dark:from-gray-700 dark:via-gray-900 dark:to-black'
       }>
-        <div className='flex-1 flex flex-col md:w-[46rem] w-full'> {/* overflow-y-scroll */}
+        <div className='flex-1 flex flex-col md:w-[46rem] w-full'>
           
-          {/* Dialog baloons */}
-          {/* overflow-x-hidden  */}
-          <div className='flex-1 flex flex-col justify-end mb-6 rounded'> {/* bg-gray-500/25 */}
-            {/* {prompts.map((p, i) =>
-              <Baloon key={i} role={p.role} className={`${p.role === 'user' ? 'animation-slideUp' : ''} ${p.error ? 'bg-red-300 dark:bg-red-600/50' : ''}`}>
-                { processPrompt(p.text).map(el => el) }
-              </Baloon>
-            )} */}
+          {/* Dialog balloons */}
+          <div className='flex-1 flex flex-col justify-end mb-6 rounded'>
             {prompts.map((p, i) =>
               <Balloon key={i} role={p.role} className={`${p.role === 'user' ? 'animation-slideUp' : ''} ${p.error ? 'bg-red-300 dark:bg-red-600/50' : ''}`}>
                 { p.text }
               </Balloon>
             )}
-            {/* { memoizedPrompts() } */}
+
+            {/* Loading balloon */}
+            {loading &&
+              <Balloon role='ai' className='animation-slideUp'>
+                <LoadingDots className='mt-2' size='0.375rem' /*color='rgba(255, 255, 255, 0.85)'*/ />
+              </Balloon>}
           </div>
 
-          {/* No baloonw yet */}
+          {/* No balloonw yet */}
           {prompts.length === 0 &&
             <span className='flex-1 self-center text-gray-400 dark:text-white/40 font-extralight'>Converse com a IA</span>}
-
-          {/* Loading baloon */}
-          {loading &&
-            <Balloon role='ai' className='animation-slideUp'>
-              <LoadingDots className='mt-2' size='0.375rem' /*color='rgba(255, 255, 255, 0.85)'*/ />
-            </Balloon>}
 
           {/* Input form */}
           <form onSubmit={handleSubmit} className='flex'>
